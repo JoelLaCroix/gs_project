@@ -18,10 +18,19 @@ io.on('connection',function(socket){
 /**
  *console.log('a user connected');
  */
-	socket.on('chat message', function(msg){
-	io.emit('chat message', msg);
-	console.log('message: ' + msg);
-	});
+ 
+ 
+  // player chat
+	socket.on('player ready',function (player){
+	 io.emit('player ready', player);
+	 console.log( player +' is ready');
+		socket.on('chat message', function(msg){
+		io.emit('chat message', {Player: player, Msg: msg});
+		console.log( player +' : ' + msg);
+		});
+	 });
+	 
+
 	
 	/**
 	 *socket.on('disconnect',function(){
