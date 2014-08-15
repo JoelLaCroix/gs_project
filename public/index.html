@@ -24,7 +24,7 @@
 			</div>
 			
 			<form id="chat" method="post" action="">
-				<input id="m" autocomplete="off" placeholder="Type for chat" /><button>Send</button>
+				<input id="message_input" autocomplete="off" placeholder="Type for chat" /><button>Send</button>
 			</form>
 			
 		</aside>
@@ -34,28 +34,52 @@
 	<script src="/socket.io/socket.io.js"> </script>
 	<script src="/js/jquery-1.11.1.min.js"></script>
 	
+	<!-- socket handeling for chat -->
 	<script>
 	var socket = io();
+	//var game_room = "1_"+Math.random(*10000) + "_BS";
 	
+	// generates random game room
+	//function generate_room()
+	//{
+	//	return "1_"+Math.random(*10000) + "_BS";
+	//}
+	
+	// handles when the user clicks on the start button after entering a player name 
 	$('#user').submit(function(){
 	socket.emit('player ready', $('#player').val());
-	$('#player').val('');
-	return false;
+	//$('#player').val('');
+	//return false;
+	socket.emit('create room', 'ppkpk');
 	});
 	
+	// handles when the user clicks on the send button 
 	$('form').submit(function(){
-	socket.emit('chat message', $('#m').val());
+	socket.emit('chat message', $('#message_input').val());
 	$('#m').val('');
 	return false;
 	});
 	
+	// client recieves room full from server; sends another request with a new room name
+	socket.on('room full', function(){
+	socket.emit('create room','joijjoi');
+	});
+	
+	// client recieves player ready message from server; appends message to chat
 	socket.on('player ready', function(player){
 	$('#messages').append($('<li>').text(player + " - has joined the game"));
 	});
 	
+	// client recieves chat message, message from serve; appends message to chat
 	socket.on('chat message', function(message){
     $('#messages').append($('<li>').text(message.Player+ " : " +message.Msg));
-  });
+	});
+	
+	// client recieves disconnect message from server; appends message to chat
+	socket.on('disconnect', function(message){
+	$('#messages').append($('<li>').text(message.Player+ " : " +message.Msg));
+	});
+	
 	</script>
 	
   </body>
