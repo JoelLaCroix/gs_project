@@ -1,0 +1,12 @@
+
+
+
+#C1, #C2, #C3 , #C4, #C5 ,#C6,#C7,#C8, #C9 {
+border: 1px black solid;
+width:100px;
+height:100px;
+margin:10px;
+padding:10px;
+}
+.cell{width:50px;height:50px;border:1px solid black;float: left;}
+.gameboard {width:520px;height:520px;border:5px solid black;clear:both;}.ship {float:left;height:52px;/*height:48px;*/background-color: blue;}.ship p{text-align:center;padding: -20px 0 0 0;font-weight:900;}.air_carrier{width:260px;/*width:240px;*/}.battleship {width:208px;/*width:192px;*/}.sub{width:156px;/*width:144px;*/}.destroyer{width:156px;/*width:144px;*/}.boat{width:104px;/*width:96px;*/}#boats{float:right;width:263px;border:1px green solid;}.position {border:1px solid red;background-color: red;}
