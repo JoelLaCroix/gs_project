@@ -6,7 +6,7 @@ var orientation = "Horizontal";
 var ship_array = [];
 var air_carrier, battle_ship, sub, destroyer, boat; 
 
-function battleship (name,orientation,size,x,y,coords)
+function battleship (name,orientation,size,y,x,coords)
 {
  this.name = name;
  this.orientation = orientation;
@@ -26,8 +26,8 @@ $(function () {
 	opacity:0.35,
 	drag: function()
 	{
-		current_size = $(this).data('size');
-		current_ship = $(this).data('type');
+		current_size = parseInt($(this).data('size'));
+		current_ship = parseInt($(this).data('type'));
 	}
 	}).on('mousedown',(function(event){
 	if (event.which === 3) // right click to rotate ship
@@ -87,24 +87,36 @@ function outOfBounds_v()
 // checks if ships over lap horizontally
 function checkOverLap_h(selected_ship)
 {
+alert("length" + ship_array.length);
 	if(ship_array.length < 1)
 	{
 		return false;
 	}
 	else
 	{
-		for ( var ship in ship_array)
+	alert("length > or = than 1");
+		for ( ship in ship_array)
 		{	// check for horizontal ship overlap
-			if (ship.orientation === "Horizontal")
+			if (ship_array[ship].orientation === "Horizontal")
 			{
-				if(ship.y === selected_ship.y && (ship.x + (ship.size -1)) >= selected_ship.x )
+				alert("ship y: " + ship_array[ship].y);
+				alert("ship x: " + ship_array[ship].x);
+				alert("current ship y: " + selected_ship.y);
+				alert("current ship x: " + selected_ship.x);
+				
+				if((ship_array[ship].y === selected_ship.y) && ((ship_array[ship].x + (ship_array[ship].size -1)) >= selected_ship.x ))
 				{
 					return true;
 				}
 			}	// check for vertical ship overlap
-			else if (ship.orientation ==="Vertical")
+			else if (ship_array[ship].orientation ==="Vertical")
 			{
-				if( (selected_ship.x + (selected_ship.size - 1)) >= ship.x)
+				alert("ship y: " + ship_array[ship].y);
+				alert("ship x: " + ship_array[ship].x);
+				alert("current ship y: " + selected_ship.y);
+				alert("current ship x: " + selected_ship.x);
+				
+				if( (selected_ship.x + (selected_ship.size - 1)) >= ship_array[ship].x)
 				{
 					return true;
 				}
@@ -124,18 +136,28 @@ function checkOverLap_v(selected_ship)
 	}
 	else
 	{
-		for ( var ship in ship_array)
+		for ( ship in ship_array)
 		{	//check for vertical ship overlap
-			if (ship.orientation === "Vertical")
+			if (ship_array[ship].orientation === "Vertical")
 			{
-				if(ship.x === selected_ship.x && (ship.y + (ship.size -1)) >= selected_ship.y )
+				alert("ship y: " + ship_array[ship].y);
+				alert("ship x: " + ship_array[ship].x);
+				alert("current ship y: " + selected_ship.y);
+				alert("current ship x: " + selected_ship.x);
+				
+				if((ship_array[ship].x === selected_ship.x) && ((ship_array[ship].y + (ship_array[ship].size -1)) >= selected_ship.y ))
 				{
 					return true;
 				}
 			}// check for horizontal ship overlap
-			else if (ship.orientation === "Horizontal")
+			else if (ship_array[ship].orientation === "Horizontal")
 			{
-				if( (ship.x + (ship.size - 1)) >= selected_ship.x)
+				alert("ship y: " + ship_array[ship].y);
+				alert("ship x: " + ship_array[ship].x);
+				alert("current ship y: " + selected_ship.y);
+				alert("current ship x: " + selected_ship.x);
+				
+				if( (ship_array[ship].x + (ship_array[ship].size - 1)) >= selected_ship.x)
 				{
 					return true;
 				}
@@ -148,14 +170,17 @@ function checkOverLap_v(selected_ship)
 
 function positionShip(event, ui)
 {	
-alert($(this).data('cellLoc'));
-	current_y = $(this).data('cellLoc').charAt(0);
-	current_x = $(this).data('cellLoc').charAt(2);
+//alert($(this).data('cellLoc'));
+	current_y = parseInt($(this).data('cellLoc').charAt(0));
+	current_x = parseInt($(this).data('cellLoc').charAt(2));
 	
 	alert("current ship size : " + current_size);
 	alert("X coord: " + current_x);
 	alert("Y coord: " + current_y);
 	
+	var sum = current_x + (current_size - 1);
+	
+	alert( sum);
 	// checks size of current ship
 		if (current_size == 5)
 		{	// check orentation 
@@ -164,10 +189,11 @@ alert($(this).data('cellLoc'));
 				if (outOfBounds_h())
 				{
 					alert('Cannot place ship here - out of bounds h');
-					//ui.draggable.draggable("option", "revert", true);
+					ui.draggable.draggable("option", "revert", true);
 				}
 				else // if not out of bounds create ship object 
 				{
+					alert("check over lap");
 					air_carrier = new battleship("air carrier","Horizontal",current_size,current_y,current_x,
 						[[current_y,current_x],[current_y,current_x+1],[current_y,current_x+2],[current_y,current_x+3],[current_y,current_x+4]]
 						);
@@ -193,7 +219,7 @@ alert($(this).data('cellLoc'));
 					else
 					{
 						alert('Cannot place ship here - over lap');
-						//ui.draggable.draggable("option", "revert", true);
+						ui.draggable.draggable("option", "revert", true);
 					}
 					
 				}
@@ -230,6 +256,7 @@ alert($(this).data('cellLoc'));
 					else
 					{
 						alert('Cannot place ship here - over lap');
+						ui.draggable.draggable("option", "revert", true);
 					}
 				}
 			
@@ -244,6 +271,7 @@ alert($(this).data('cellLoc'));
 				if (outOfBounds_h())
 				{
 					alert('Cannot place ship here - out of bounds - h');
+					ui.draggable.draggable("option", "revert", true);
 				}
 				else // if not out of bounds create ship object 
 				{
@@ -273,6 +301,7 @@ alert($(this).data('cellLoc'));
 					else
 					{
 						alert('Cannot place ship here - over lap');
+						ui.draggable.draggable("option", "revert", true);
 					}
 					
 				}
@@ -282,6 +311,7 @@ alert($(this).data('cellLoc'));
 				if (outOfBounds_v())
 				{
 					alert('Cannot place ship here - out of bounds v');
+					ui.draggable.draggable("option", "revert", true);
 				}
 				else // if not out of bounds create ship object 
 				{
@@ -310,6 +340,7 @@ alert($(this).data('cellLoc'));
 					else
 					{
 						alert('Cannot place ship here - over lap');
+						ui.draggable.draggable("option", "revert", true);
 					}
 
 				}
@@ -325,6 +356,7 @@ alert($(this).data('cellLoc'));
 					if (outOfBounds_h())
 					{
 						alert('Cannot place ship here');
+						ui.draggable.draggable("option", "revert", true);
 					}
 					else // if not out of bounds create ship object 
 					{
@@ -353,6 +385,7 @@ alert($(this).data('cellLoc'));
 						else
 						{
 							alert('Cannot place ship here');
+							ui.draggable.draggable("option", "revert", true);
 						}
 						
 					}
@@ -362,6 +395,7 @@ alert($(this).data('cellLoc'));
 					if (outOfBounds_v())
 					{
 						alert('Cannot place ship here');
+						ui.draggable.draggable("option", "revert", true);
 					}
 					else // if not out of bounds create ship object 
 					{
@@ -386,6 +420,11 @@ alert($(this).data('cellLoc'));
 							at: 'left top'
 							});
 						}
+						else
+						{
+							alert('Cannot place ship here');
+							ui.draggable.draggable("option", "revert", true);
+						}
 					}
 				}
 			}
@@ -396,6 +435,7 @@ alert($(this).data('cellLoc'));
 					if (outOfBounds_h())
 					{
 						alert('Cannot place ship here');
+						ui.draggable.draggable("option", "revert", true);
 					}
 					else // if not out of bounds create ship object 
 					{
@@ -424,6 +464,7 @@ alert($(this).data('cellLoc'));
 						else
 						{
 							alert('Cannot place ship here');
+							ui.draggable.draggable("option", "revert", true);
 						}
 					}
 				}
@@ -432,6 +473,7 @@ alert($(this).data('cellLoc'));
 					if (outOfBounds_v())
 					{
 						alert('Cannot place ship here');
+						ui.draggable.draggable("option", "revert", true);
 					}
 					else // if not out of bounds create ship object 
 					{
@@ -456,6 +498,11 @@ alert($(this).data('cellLoc'));
 							at: 'left top'
 							});
 						}
+						else
+						{
+							alert('Cannot place ship here');
+							ui.draggable.draggable("option", "revert", true);
+						}
 					}
 				}
 			}
@@ -468,6 +515,7 @@ alert($(this).data('cellLoc'));
 				if (outOfBounds_h())
 				{
 					alert('Cannot place ship here');
+					ui.draggable.draggable("option", "revert", true);
 				}
 				else // if not out of bounds create ship object 
 				{
@@ -496,6 +544,7 @@ alert($(this).data('cellLoc'));
 					else
 					{
 						alert('Cannot place ship here');
+						ui.draggable.draggable("option", "revert", true);
 					}
 				}
 			}
@@ -504,6 +553,7 @@ alert($(this).data('cellLoc'));
 				if (outOfBounds_v())
 				{
 					alert('Cannot place ship here');
+					ui.draggable.draggable("option", "revert", true);
 				}
 				else // if not out of bounds create ship object 
 				{
@@ -527,6 +577,11 @@ alert($(this).data('cellLoc'));
 						my: 'left top',
 						at: 'left top'
 						});
+					}
+					else
+					{
+						alert('Cannot place ship here');
+						ui.draggable.draggable("option", "revert", true);
 					}
 				}
 			//$(this).droppable('destroy');
